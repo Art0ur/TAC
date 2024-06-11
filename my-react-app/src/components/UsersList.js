@@ -3,29 +3,36 @@ import React, { useEffect, useState } from 'react';
 import './UsersList.css';
 
 function UsersList() {
-  const [pessoas, setPessoas] = useState([]);
+    const [pessoas, setPessoas] = useState([]);
 
-  useEffect(() => {
-    fetch('http://localhost:8080/pessoa')
-      .then(response => response.json())
-      .then(data => setPessoas(data))
-      .catch(error => console.error('Erro ao buscar pessoas:', error));
-  }, []);
+    useEffect(() => {
+        fetch('http://localhost:8080/pessoa')
+            .then(response => response.json())
+            .then(data => setPessoas(data))
+            .catch(error => console.error('Erro ao buscar pessoas:', error));
+    }, []);
 
-  return (
-    React.createElement('div', { className: 'users-list-container' },
-      React.createElement('h2', null, 'Pessoas'),
-      React.createElement('ul', null,
-        pessoas.map(pessoa =>
-          React.createElement('li', { key: pessoa.id },
-            React.createElement('span', { className: 'user-name' }, pessoa.nome),
-            ' - ',
-            React.createElement('span', { className: 'user-email' }, pessoa.email)
-          )
-        )
-      )
-    )
-  );
+    return (
+        <div className="users-list-container">
+            <h2>Lista de Usuários</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                </tr>
+                </thead>
+                <tbody>
+                {pessoas.map(pessoa => (
+                    <tr key={pessoa.id}>
+                        <td className="user-name">{pessoa.nome}</td>
+                        <td className="user-email">{pessoa.email}</td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+        </div>
+    );
 }
 
 export default UsersList;
