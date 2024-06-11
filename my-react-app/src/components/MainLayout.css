@@ -1,0 +1,25 @@
+/* Estilização do layout principal */
+
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-layout main {
+  flex: 1;
+  padding: 20px;
+}
+
+.app-footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #282c34;
+  color: white;
+  width: 100%;
+}
+
+.app-footer-text {
+  margin: 0;
+  font-size: 0.875rem;
+}

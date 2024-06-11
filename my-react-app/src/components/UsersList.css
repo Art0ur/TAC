@@ -1,0 +1,37 @@
+/* src/components/UsersList.css */
+.users-list-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .users-list-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .users-list-container ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .users-list-container li {
+    background-color: #f2f2f2;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .users-list-container li:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .user-name {
+    font-weight: bold;
+  }
+  
+  .user-email {
+    color: #666;
+  }
+  
