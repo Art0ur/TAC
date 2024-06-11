@@ -22,3 +22,9 @@ Vá para a aba "Contas de Serviço".
 Em "SDK Admin do Firebase", selecione "Node.js"
 Clique em "Gerar nova chave privada" e baixe o arquivo JSON. (Isso conterá as credenciais necessárias para acessar o Firestore.)
 Jogue esse arquivo na pasta config dentro desse projeto.
+
+Instale o NPM
+npm install
+
+Inicie o Servidor:
+node app.js
