@@ -1,24 +1,16 @@
 package com.backend.controllers;
 
-import java.util.List;
-
+import com.backend.exceptions.NotFoundException;
+import com.backend.model.Pessoa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import com.backend.dto.PessoaDTO;
-import com.backend.exceptions.NotFoundException;
-import com.backend.model.Pessoa;
 import com.backend.service.PessoaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import java.util.List;
 
 @RestController
 @RequestMapping("/pessoa")
@@ -27,6 +19,8 @@ public class PessoaController {
     @Autowired
     private PessoaService pessoaService;
 
+    @Operation(summary = "Cria uma nova pessoa")
+    @ApiResponse(responseCode = "201", description = "Pessoa criada com sucesso")
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping
     public ResponseEntity<Object> create(@RequestBody PessoaDTO dto) {
@@ -38,12 +32,17 @@ public class PessoaController {
         }
     }
 
+    @Operation(summary = "Obtém todas as pessoas")
+    @ApiResponse(responseCode = "200", description = "Operação bem-sucedida")
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping
     public List<Pessoa> getAll() {
         return pessoaService.getAll();
     }
 
+    @Operation(summary = "Obtém uma pessoa pelo ID")
+    @ApiResponse(responseCode = "200", description = "Pessoa encontrada")
+    @ApiResponse(responseCode = "404", description = "Pessoa não encontrada")
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/{id}")
     public ResponseEntity<Object> getById(@PathVariable("id") long id) {
@@ -51,6 +50,9 @@ public class PessoaController {
         return person.isPresent() ? ResponseEntity.ok().body(person.get()) : ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "Atualiza uma pessoa")
+    @ApiResponse(responseCode = "200", description = "Pessoa atualizada com sucesso")
+    @ApiResponse(responseCode = "404", description = "Pessoa não encontrada")
     @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping("/{id}")
     public ResponseEntity<Object> update(@PathVariable("id") long id, @RequestBody PessoaDTO dto) {
@@ -64,6 +66,9 @@ public class PessoaController {
         }
     }
 
+    @Operation(summary = "Exclui uma pessoa")
+    @ApiResponse(responseCode = "200", description = "Pessoa excluída com sucesso")
+    @ApiResponse(responseCode = "404", description = "Pessoa não encontrada")
     @CrossOrigin(origins = "http://localhost:3000")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@PathVariable("id") long id) {
