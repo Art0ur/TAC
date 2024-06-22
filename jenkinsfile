@@ -2,7 +2,7 @@ pipeline {
 agent any
 
 environment {
-DOCKER_IMAGE = "dockerr"
+DOCKER_IMAGE = "docker"
 CONTAINER_NAME = "container"
 GIT_REPO_URL = "https://github.com/Art0ur/TAC.git"
 BRANCH = "main"
