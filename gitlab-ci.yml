@@ -1,0 +1,106 @@
+stages:
+  - build
+  - deploy
+  - notify
+
+variables:
+  DOCKER_DRIVER: overlay2
+
+before_script:
+  - docker info
+
+# Job para o backend Spring Boot
+build_backend:
+  stage: build
+  script:
+    - cd Backend
+    - docker build -t backend-app .
+  tags:
+    - docker
+
+deploy_backend:
+  stage: deploy
+  script:
+    - docker stop backend-container || true
+    - docker rm backend-container || true
+    - docker rmi backend-app || true
+    - docker run -d --name backend-container backend-app
+  tags:
+    - docker
+
+# Job para a API do Express
+build_express:
+  stage: build
+  script:
+    - cd iot-events-api
+    - docker build -t express-app .
+  tags:
+    - docker
+
+deploy_express:
+  stage: deploy
+  script:
+    - docker stop express-container || true
+    - docker rm express-container || true
+    - docker rmi express-app || true
+    - docker run -d --name express-container express-app
+  tags:
+    - docker
+
+# Job para o frontend React
+build_react:
+  stage: build
+  script:
+    - cd my-react-app
+    - docker build -t react-app .
+  tags:
+    - docker
+
+deploy_react:
+  stage: deploy
+  script:
+    - docker stop react-container || true
+    - docker rm react-container || true
+    - docker rmi react-app || true
+    - docker run -d --name react-container react-app
+  tags:
+    - docker
+
+# Configuração do msmtp e envio de email
+setup_msmtp:
+  stage: notify
+  script:
+    - apt-get update -qy
+    - apt-get install -qy msmtp
+    - echo "account default" > ~/.msmtprc
+    - echo "host smtp.gmail.com" >> ~/.msmtprc
+    - echo "port 587" >> ~/.msmtprc
+    - echo "auth on" >> ~/.msmtprc
+    - echo "user arturs.2019@alunos.utfpr.edu.br" >> ~/.msmtprc
+    - echo "password atrfyj42" >> ~/.msmtprc  # Use the actual password here
+    - echo "tls on" >> ~/.msmtprc
+    - echo "tls_trust_file /etc/ssl/certs/ca-certificates.crt" >> ~/.msmtprc
+    - echo "from arturs.2019@alunos.utfpr.edu.br" >> ~/.msmtprc
+    - echo "logfile ~/.msmtp.log" >> ~/.msmtprc
+    - chmod 600 ~/.msmtprc
+    - touch ~/.msmtp.log
+  tags:
+    - docker
+
+send_email:
+  stage: notify
+  script:
+    - echo "Subject: Job Status\nJob finished successfully" | msmtp --from=default -t arturs.2019@alunos.utfpr.edu.br
+  tags:
+    - docker
+  when: always
+  dependencies:
+    - setup_msmtp
+
+schedules:
+  - name: Daily Pipeline
+    cron: "0 3 * * *"
+    description: "Run pipeline every day at 3am"
+    ref: main
+    only:
+      - schedules
